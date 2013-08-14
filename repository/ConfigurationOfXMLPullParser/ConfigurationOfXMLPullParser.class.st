@@ -132,7 +132,7 @@ ConfigurationOfXMLPullParser >> customProjectAttributes [
 ConfigurationOfXMLPullParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.0'.
+	spec for: #'common' version: #'notDefined'.
 
 ]
 
@@ -149,12 +149,20 @@ ConfigurationOfXMLPullParser >> project [
 		project ]
 ]
 
+{ #category : #'symbolic versions' }
+ConfigurationOfXMLPullParser >> stable: spec [
+	<symbolicVersion: #'stable'>
+
+	spec for: #'common' version: '1.0'.
+
+]
+
 { #category : #versions }
 ConfigurationOfXMLPullParser >> version10: spec [
 	<version: '1.0' imports: #('1.0-baseline' )>
 
 	spec for: #'common' do: [
-		spec blessing: #'development'.
+		spec blessing: #'release'.
 		spec description: ''.
 		spec author: 'HernanMoralesDurand'.
 		spec timestamp: '8/14/2013 08:29'.
