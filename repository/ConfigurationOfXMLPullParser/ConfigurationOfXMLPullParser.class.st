@@ -132,7 +132,7 @@ ConfigurationOfXMLPullParser >> customProjectAttributes [
 ConfigurationOfXMLPullParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: #'notDefined'.
+	spec for: #'common' version: '1.0'.
 
 ]
 
