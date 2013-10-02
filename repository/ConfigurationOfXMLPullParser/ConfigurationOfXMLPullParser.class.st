@@ -1,3 +1,7 @@
+"
+(ConfigurationOfXMLPullParser project version: #stable) load
+ 
+"
 Class {
 	#name : #ConfigurationOfXMLPullParser,
 	#superclass : #Object,
@@ -27,6 +31,58 @@ ConfigurationOfXMLPullParser class >> baseConfigurationClassIfAbsent: aBlock [
 			self ensureMetacelloBaseConfiguration.
 			Smalltalk at: #MetacelloBaseConfiguration ifAbsent: aBlock ].
 
+]
+
+{ #category : #catalog }
+ConfigurationOfXMLPullParser class >> catalogChangeLog [
+		
+ ^ '
+-14/08/2013 - First public release.
+[[[
+(ConfigurationOfSoup project version: #''stable'') load
+(ConfigurationOfSoup project version: ''1.0'') load
+]]]
+'
+	
+	
+]
+
+{ #category : #catalog }
+ConfigurationOfXMLPullParser class >> catalogDescription [
+
+^ 
+'XMLPullParser is a robust parser for XML.'
+]
+
+{ #category : #catalog }
+ConfigurationOfXMLPullParser class >> catalogKeyClassesAndExample [
+
+	^ 'It is composed of some keys classes: 
+		
+- ==XMLPullParser== is the main entry point.
+		
+- ==XMLPullParserTest== is the main entry point.
+
+The best way to get started is to get a  of html elements using ==XMLPullParser class>>parse: == as follows:
+
+[[[ 
+	| parser |
+	parser := XMLPullParser parse: ''<document><![CDATA[This is a test ]]></document>''.
+	self assert: parser isStartDocument.
+	self assert: (parser next isStartTag: ''document'').
+	self assert: parser next isText.
+	self assert: parser text = ''This is a test ''.
+	self assert: (parser isEndTag: ''document'').
+	self assert: parser next isEndDocument
+]]]
+	
+Tests of the ==XMLPullParserTest== class are the place to start to learn the API.'
+]
+
+{ #category : #catalog }
+ConfigurationOfXMLPullParser class >> catalogKeywords [
+	^ #(XML web parser)
+	
 ]
 
 { #category : #private }
