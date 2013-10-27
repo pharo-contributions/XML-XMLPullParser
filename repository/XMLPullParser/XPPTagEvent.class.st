@@ -1,3 +1,6 @@
+"
+XPPTagEvent is the event raised when we arrive on a tag.
+"
 Class {
 	#name : #XPPTagEvent,
 	#superclass : #XPPEvent,
