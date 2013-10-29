@@ -209,7 +209,7 @@ ConfigurationOfXMLPullParser >> project [
 ConfigurationOfXMLPullParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.0'.
+	spec for: #'common' version: '1.1'.
 
 ]
 
@@ -223,5 +223,18 @@ ConfigurationOfXMLPullParser >> version10: spec [
 		spec author: 'HernanMoralesDurand'.
 		spec timestamp: '8/14/2013 08:29'.
 		spec package: 'XMLPullParser' with: 'XMLPullParser-HernanMoralesDurand.13'. ].
+
+]
+
+{ #category : #versions }
+ConfigurationOfXMLPullParser >> version11: spec [
+	<version: '1.1' imports: #('1.0-baseline' )>
+
+	spec for: #'common' do: [
+		spec blessing: #'release'.
+		spec description: 'Adding class comments and some little cleans'.
+		spec author: 'StephaneDucasse'.
+		spec timestamp: '27/10/2013 08:29'.
+		spec package: 'XMLPullParser' with: 'XMLPullParser-StephaneDucasse.15'. ].
 
 ]
