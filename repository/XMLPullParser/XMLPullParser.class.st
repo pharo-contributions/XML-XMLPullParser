@@ -1,5 +1,8 @@
 "
-This is a mashup of Antony Blakey's XMLPullParser (for VisualWorks, which makes use of the VisualWorks XML code) and the Squeak XMLTokenizer.
+XMLPushParser is a stream-based XMLParser originally developed by Antony Blakey and released under MIT license. 
+
+
+We could use cull: instead of numArgs = 1
 "
 Class {
 	#name : #XMLPullParser,
@@ -292,18 +295,24 @@ XMLPullParser >> isText [
 
 { #category : #'tag-based api' }
 XMLPullParser >> match: tagName peek: aBlock [ 
+	"Throws an exception if the current event isn’t a start tag matching the given tag name. If it succeeds, then aBlock is evaluated without consuming the start tag event. The block can take zero or one argument. If it takes one argument then the cur
+rent event is passed to the block."
+
 	self mustBeStartTag: tagName.
 	^self matchAnyPeek: aBlock
 ]
 
 { #category : #'tag-based api' }
 XMLPullParser >> match: tagName take: aBlock [ 
+	"Throws an exception if the current event isn’t a start tag matching the given tag name. If it succeeds, then aBlock is evaluated after consuming the start tag event. The block can take zero or one argument. If it takes one argument then the start tag event that was consumed is passed to the block, which can be useful for processing the attributes. After the block executes, the parser must be at an end tag matching the start tag. This end tag is then consumed."
+
 	self mustBeStartTag: tagName.
 	^self matchAnyTake: aBlock
 ]
 
 { #category : #'tag-based api' }
 XMLPullParser >> matchAnyPeek: aBlock [ 
+	"Throws an exception if the current event isn’t a start tag. If it succeeds, then then aBlock is evaluated without consuming the start tag event. The block can take zero or one argument. If it takes one argument then the current event is passed to the block."
 	self mustBeStartTag.
 	^aBlock numArgs = 1 
 		ifTrue: [aBlock value: self current]
@@ -312,6 +321,8 @@ XMLPullParser >> matchAnyPeek: aBlock [
 
 { #category : #'tag-based api' }
 XMLPullParser >> matchAnyTake: aBlock [ 
+	"Throws an exception if the current event isn’t a start tag. If it succeeds, then aBlock is evaluated after consuming the start tag event. The block can take zero or one argument. If it takes one argument then the start tag event that was consumed is passed to the block, which can be useful for processing the attributes. After the block executes the parser must be at an end tag matching the start tag. This end tag is then consumed."
+
 	| result |
 	result := aBlock numArgs = 1 
 		ifTrue: 
@@ -794,6 +805,8 @@ XMLPullParser >> serializeUntilEndTagTo: serializer [
 
 { #category : #'tag-based api' }
 XMLPullParser >> skip: tagName [ 
+	"Throw an exception if current event isn't a start tag, or doesn't match a supplied tag name. If it succeeds then it consumes the start tag, and all events up to and including the matching end tag, taking correct account of tag nesting. Thus it doesn't stop at the first matching end tag, but rather it keeps a count of the nesting depth."
+
 	self consumeStartTag: tagName.
 	[self isEndTag] whileFalse: 
 			[| event |
@@ -809,6 +822,7 @@ XMLPullParser >> skip: tagName [
 
 { #category : #'tag-based api' }
 XMLPullParser >> skipAny [
+	"Throw an exception if current event isn't a start tag. If it succeeds then it consumes the start tag, and all events up to and including the matching end tag, taking correct account of tag nesting. Thus it doesn’t stop at the first matching end tag, but rather it keeps a count of the nesting depth."
 	self consumeStartTag.
 	[self isEndTag] whileFalse: 
 			[| event |

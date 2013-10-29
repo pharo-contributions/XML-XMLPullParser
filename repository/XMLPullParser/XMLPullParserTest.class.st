@@ -106,3 +106,35 @@ XMLPullParserTest >> testSingleTag [
 	self assert: (parser next isEndTag: 'document').
 	self assert: parser next isEndDocument
 ]
+
+{ #category : #testing }
+XMLPullParserTest >> testTextExtractionFirstLevel [
+	"self debug:#testTextExtractionFirstLevel"
+	
+	| xpp  output |
+	xpp := XMLPullParser parse: '<document>
+  <tagA a1=''att1'' a2=''att2''>blah</tagA>
+  <tagB>aaa<tagC>bbb</tagC>ccc</tagB>
+</document>'.
+      output := String new writeStream.
+  	[ xpp next isEndDocument ] whileFalse: [
+   	    xpp isText ifTrue: [ output nextPutAll: xpp text ]].
+  	self assert: output contents equals: 'blahaaabbbccc'. 
+	
+]
+
+{ #category : #testing }
+XMLPullParserTest >> testTextExtractionFirstLevel2 [
+	"self debug:#testTextExtractionFirstLevel2"
+	
+	| xpp  output |
+	xpp := XMLPullParser parse: '<person id="27">
+	<!-- Comment -->
+	<name>Kent Beck</name>
+	<notedFor>XP</notedFor>
+</person>'.
+      output := String new writeStream.
+  	[ xpp next isEndDocument ] whileFalse: [
+   	    xpp isText ifTrue: [ output nextPutAll: xpp text ]].
+  	 self assert: output contents  equals: 'Kent BeckXP'
+]

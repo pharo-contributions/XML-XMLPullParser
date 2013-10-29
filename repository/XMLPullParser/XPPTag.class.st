@@ -1,4 +1,9 @@
 "
+The implementation of this class is incomplete.
+the doc says:
+	""The names of tags are instances of XPPTag, which are a triple of namespace, type (local name) and qualification, and attributes.""
+
+
 Represents tagC in
 StartTag{tagC, []}
 
@@ -29,10 +34,24 @@ Class {
 	#name : #XPPTag,
 	#superclass : #Object,
 	#instVars : [
-		'name'
+		'name',
+		'attributes',
+		'type'
 	],
 	#category : #XMLPullParser
 }
+
+{ #category : #accessing }
+XPPTag >> attributes [ 
+
+	^ attributes
+]
+
+{ #category : #accessing }
+XPPTag >> attributes: aCol [ 
+	
+	attributes := aCol
+]
 
 { #category : #testing }
 XPPTag >> isLike: aString [
@@ -52,4 +71,16 @@ XPPTag >> name: anObject [
 { #category : #printing }
 XPPTag >> printOn: aStream [
 	aStream nextPutAll: '{', name, '}'
+]
+
+{ #category : #accessing }
+XPPTag >> type [
+
+	^ name 
+]
+
+{ #category : #accessing }
+XPPTag >> type: aName [ 
+
+	name := aName
 ]
