@@ -4,7 +4,7 @@ XPPEvent is the root of the event hierarchy. It is abstract.
 Class {
 	#name : #XPPEvent,
 	#superclass : #Object,
-	#category : #XMLPullParser
+	#category : 'XMLPullParser'
 }
 
 { #category : #testing }

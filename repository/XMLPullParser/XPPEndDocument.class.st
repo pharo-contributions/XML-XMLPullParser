@@ -4,7 +4,7 @@ XPPEndDocument is the event raised when we arrive at the end of a document.
 Class {
 	#name : #XPPEndDocument,
 	#superclass : #XPPEvent,
-	#category : #XMLPullParser
+	#category : 'XMLPullParser'
 }
 
 { #category : #testing }

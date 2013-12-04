@@ -27,7 +27,7 @@ Class {
 	#instVars : [
 		'attributes'
 	],
-	#category : #XMLPullParser
+	#category : 'XMLPullParser'
 }
 
 { #category : #'instance creation' }

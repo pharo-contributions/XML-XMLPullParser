@@ -38,7 +38,7 @@ Class {
 		'attributes',
 		'type'
 	],
-	#category : #XMLPullParser
+	#category : 'XMLPullParser'
 }
 
 { #category : #accessing }

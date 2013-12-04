@@ -28,7 +28,7 @@ Class {
 		'NameDelimiters',
 		'SeparatorTable'
 	],
-	#category : #XMLPullParser
+	#category : 'XMLPullParser'
 }
 
 { #category : #'instance creation' }
@@ -183,7 +183,12 @@ XMLPullParser >> entities [
 { #category : #entities }
 XMLPullParser >> entity: refName [ 
 	^ self entities at: refName
-		ifAbsentPut: [self parseError: 'XML undefined entity ' , refName printString]
+		ifAbsentPut: [XPPStructureException raiseSignal: 'XML undefined entity ' , refName printString]
+]
+
+{ #category : #private }
+XMLPullParser >> errorExpected: expectedString [
+	XPPStructureException raiseSignal: 'Expected ', expectedString
 ]
 
 { #category : #private }
@@ -673,7 +678,7 @@ XMLPullParser >> nextTrimmedBlanksUpTo: delimiter [
 		whileFalse: [nextChar == $  ifFalse: [resultStream nextPut: nextChar]].
 	nextChar == delimiter 
 		ifFalse: 
-			[self parseError: 'XML no delimiting ' , delimiter printString , ' found'].
+			[XPPStructureException raiseSignal: 'XML no delimiting ' , delimiter printString , ' found'].
 	^ resultStream contents
 ]
 
@@ -685,8 +690,7 @@ XMLPullParser >> nextUpToAll: delimitingString [
 	 stream skip: delimitingString size negated.
 	( stream next: delimitingString size) = delimitingString 
 		ifFalse: 
-			[self 
-				parseError: 'XML no delimiting ' , delimitingString printString , ' found'].
+			[XPPStructureException raiseSignal: 'XML no delimiting ' , delimitingString printString , ' found'].
 	^ string
 ]
 
@@ -865,7 +869,7 @@ XMLPullParser >> skipUpTo: delimiter [
 	[self atEnd or: [(nextChar := self nextChar) == delimiter]] whileFalse: [].
 	nextChar == delimiter 
 		ifFalse: 
-			[self parseError: 'XML no delimiting ' , delimiter printString , ' found']
+			[XPPStructureException raiseSignal: 'XML no delimiting ' , delimiter printString , ' found']
 ]
 
 { #category : #'tag-based api' }
