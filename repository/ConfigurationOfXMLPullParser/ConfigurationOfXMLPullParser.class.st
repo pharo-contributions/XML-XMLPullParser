@@ -39,8 +39,7 @@ ConfigurationOfXMLPullParser class >> catalogChangeLog [
  ^ '
 -14/08/2013 - First public release.
 [[[
-(ConfigurationOfSoup project version: #''stable'') load
-(ConfigurationOfSoup project version: ''1.0'') load
+(ConfigurationOfXMLPullParser project version: #''stable'') load
 ]]]
 '
 	
@@ -209,7 +208,7 @@ ConfigurationOfXMLPullParser >> project [
 ConfigurationOfXMLPullParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.1'.
+	spec for: #'common' version: '1.2'.
 
 ]
 
@@ -236,5 +235,18 @@ ConfigurationOfXMLPullParser >> version11: spec [
 		spec author: 'StephaneDucasse'.
 		spec timestamp: '27/10/2013 08:29'.
 		spec package: 'XMLPullParser' with: 'XMLPullParser-StephaneDucasse.15'. ].
+
+]
+
+{ #category : #versions }
+ConfigurationOfXMLPullParser >> version12: spec [
+	<version: '1.2' imports: #('1.0-baseline' )>
+
+	spec for: #'common' do: [
+		spec blessing: #'release'.
+		spec description: '#parseError: fix by Johan Brichau'.
+		spec author: 'HernanMoralesDurand'.
+		spec timestamp: '26/04/2014 08:29'.
+		spec package: 'XMLPullParser' with: 'XMLPullParser-StephaneDucasse.19'. ].
 
 ]
