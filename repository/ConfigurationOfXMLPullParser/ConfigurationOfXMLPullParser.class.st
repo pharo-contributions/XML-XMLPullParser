@@ -247,6 +247,6 @@ ConfigurationOfXMLPullParser >> version12: spec [
 		spec description: '#parseError: fix by Johan Brichau'.
 		spec author: 'HernanMoralesDurand'.
 		spec timestamp: '26/04/2014 08:29'.
-		spec package: 'XMLPullParser' with: 'XMLPullParser-StephaneDucasse.19'. ].
+		spec package: 'XMLPullParser' with: 'XMLPullParser-JohanBrichau.19'. ].
 
 ]
