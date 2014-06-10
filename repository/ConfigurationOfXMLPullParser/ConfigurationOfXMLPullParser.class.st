@@ -187,7 +187,7 @@ ConfigurationOfXMLPullParser >> customProjectAttributes [
 ConfigurationOfXMLPullParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.0'.
+	spec for: #'common' version: '1.3'.
 
 ]
 
@@ -208,7 +208,7 @@ ConfigurationOfXMLPullParser >> project [
 ConfigurationOfXMLPullParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.2'.
+	spec for: #'common' version: '1.3'.
 
 ]
 
@@ -248,5 +248,18 @@ ConfigurationOfXMLPullParser >> version12: spec [
 		spec author: 'HernanMoralesDurand'.
 		spec timestamp: '26/04/2014 08:29'.
 		spec package: 'XMLPullParser' with: 'XMLPullParser-JohanBrichau.19'. ].
+
+]
+
+{ #category : #versions }
+ConfigurationOfXMLPullParser >> version13: spec [
+	<version: '1.3' imports: #('1.0-baseline' )>
+
+	spec for: #'common' do: [
+		spec blessing: #'release'.
+		spec description: 'All green tests now for Pharo 3.0'.
+		spec author: 'SergeStinckwich'.
+		spec timestamp: '08/06/2014 22:59'.
+		spec package: 'XMLPullParser' with: 'XMLPullParser-SergeStinckwich.20'. ].
 
 ]
