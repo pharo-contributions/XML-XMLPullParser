@@ -23,7 +23,7 @@ EndDocument
 Class {
 	#name : #XPPEndTag,
 	#superclass : #XPPTagEvent,
-	#category : 'XMLPullParser'
+	#category : #XMLPullParser
 }
 
 { #category : #testing }

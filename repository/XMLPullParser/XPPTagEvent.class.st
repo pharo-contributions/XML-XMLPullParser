@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'tag'
 	],
-	#category : 'XMLPullParser'
+	#category : #XMLPullParser
 }
 
 { #category : #'instance creation' }

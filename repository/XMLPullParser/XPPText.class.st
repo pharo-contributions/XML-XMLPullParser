@@ -27,7 +27,7 @@ Class {
 	#instVars : [
 		'text'
 	],
-	#category : 'XMLPullParser'
+	#category : #XMLPullParser
 }
 
 { #category : #'instance creation' }

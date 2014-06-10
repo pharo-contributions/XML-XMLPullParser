@@ -1,7 +1,7 @@
 Class {
 	#name : #XMLPullParserTest,
 	#superclass : #TestCase,
-	#category : 'XMLPullParser'
+	#category : #XMLPullParser
 }
 
 { #category : #testing }
@@ -64,7 +64,7 @@ XMLPullParserTest >> testEscapes [
 { #category : #testing }
 XMLPullParserTest >> testParsingError [
 
-	self should: [(XMLPullParser parse: '<body') next] raise: XPPStructureException	
+	self should: [(XMLPullParser parse: '<body') next] raise: XPPStructureException
 ]
 
 { #category : #testing }

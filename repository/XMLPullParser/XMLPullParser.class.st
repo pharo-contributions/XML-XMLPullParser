@@ -28,7 +28,7 @@ Class {
 		'NameDelimiters',
 		'SeparatorTable'
 	],
-	#category : 'XMLPullParser'
+	#category : #XMLPullParser
 }
 
 { #category : #'instance creation' }
@@ -188,7 +188,7 @@ XMLPullParser >> entity: refName [
 
 { #category : #private }
 XMLPullParser >> errorExpected: expectedString [
-	XPPStructureException raiseSignal: 'Expected ', expectedString
+	XPPStructureException signal: 'Expected ', expectedString
 ]
 
 { #category : #private }
