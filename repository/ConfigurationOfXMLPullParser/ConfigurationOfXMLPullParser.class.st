@@ -175,6 +175,18 @@ ConfigurationOfXMLPullParser >> baseline10: spec [
 
 ]
 
+{ #category : #baselines }
+ConfigurationOfXMLPullParser >> baseline14: spec [
+	<version: '1.4-baseline'>
+
+	spec for: #'common' do: [
+		spec blessing: #'baseline'.
+		spec repository: 'http://www.smalltalkhub.com/mc/hernan/XMLPullParser/main'.
+		spec package: 'XMLPullParser'.
+		spec group: 'default' with: #('XMLPullParser' ). ].
+
+]
+
 { #category : #accessing }
 ConfigurationOfXMLPullParser >> customProjectAttributes [
 	 "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -187,7 +199,7 @@ ConfigurationOfXMLPullParser >> customProjectAttributes [
 ConfigurationOfXMLPullParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.3'.
+	spec for: #'common' version: '1.4-baseline'.
 
 ]
 
@@ -208,7 +220,7 @@ ConfigurationOfXMLPullParser >> project [
 ConfigurationOfXMLPullParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.3'.
+	spec for: #'common' version: '1.4'.
 
 ]
 
@@ -261,5 +273,18 @@ ConfigurationOfXMLPullParser >> version13: spec [
 		spec author: 'SergeStinckwich'.
 		spec timestamp: '08/06/2014 22:59'.
 		spec package: 'XMLPullParser' with: 'XMLPullParser-SergeStinckwich.20'. ].
+
+]
+
+{ #category : #versions }
+ConfigurationOfXMLPullParser >> version14: spec [
+	<version: '1.4' imports: #('1.4-baseline' )>
+
+	spec for: #'common' do: [
+		spec blessing: #'stable'.
+		spec description: 'version 1.4'.
+		spec author: 'HernanMoralesDurand'.
+		spec timestamp: '7/29/2014 12:35'.
+		spec package: 'XMLPullParser' with: 'XMLPullParser-HernanMoralesDurand.22'. ].
 
 ]
