@@ -62,9 +62,73 @@ XMLPullParserTest >> testEscapes [
 ]
 
 { #category : #testing }
+XMLPullParserTest >> testIncludesTag [
+
+	| parser tagCollection  |
+
+	parser := XMLPullParser parse: '<document><body></body></document>'.
+	tagCollection :=  { 'body' }.
+	[ parser atEnd not and: [ (parser includesTag: tagCollection) not]  ]
+		whileTrue: [ parser next ].
+	self assert: (parser includesTag: tagCollection).
+
+]
+
+{ #category : #testing }
+XMLPullParserTest >> testIsTag [
+	| parser |
+	parser := XMLPullParser parse: '
+<person id="27">
+	<!-- Comment -->
+	<name>Kent Beck</name>
+	<notedFor>XP</notedFor>
+</person>
+'.
+	self assert: parser isStartDocument.
+	self assert: parser next isTag. " 'person' "
+	self assert: parser next isTag. " 'name' "
+	self deny: parser next isTag.
+	self assert: parser next isTag. " '/name' "
+	self assert: parser next isTag. " 'notedFor' "
+	self deny: parser next isTag.
+	self assert: parser next isTag. " '/notedFor' "
+	self assert: parser next isTag. " '/person' "
+	self assert: parser next isEndDocument
+]
+
+{ #category : #testing }
 XMLPullParserTest >> testParsingError [
 
 	self should: [(XMLPullParser parse: '<body') next] raise: XPPStructureException
+]
+
+{ #category : #testing }
+XMLPullParserTest >> testPeekText [
+	| parser |
+	parser := XMLPullParser parse: '
+<person id="27">
+	<!-- Comment -->
+	<name>Kent Beck</name>
+	<notedFor>XP</notedFor>
+</person>
+'.
+	self assert: parser isStartDocument.
+	parser next.
+	self assert: parser peekText = ''. "person"
+	parser next.
+	self assert: parser peekText = ''. "name"
+	parser next.
+	self assert: parser peekText = 'Kent Beck'.
+	parser next.
+	self assert: parser peekText = ''. "/name"
+	parser next.
+	self assert: parser peekText = ''. "notedFor"
+	parser next.
+	self assert: parser peekText = 'XP'.
+	parser next.
+	self assert: parser peekText = ''. "/notedFor"
+	parser next.
+	self assert: parser next isEndDocument
 ]
 
 { #category : #testing }
@@ -114,6 +178,33 @@ XMLPullParserTest >> testSingleTag [
 ]
 
 { #category : #testing }
+XMLPullParserTest >> testTagName [
+	| parser |
+	parser := XMLPullParser parse: '
+<person id="27">
+	<!-- Comment -->
+	<name>Kent Beck</name>
+	<notedFor>XP</notedFor>
+</person>
+'.
+	self assert: parser isStartDocument.
+	parser next.
+	self assert: (parser tagName = 'person').
+	parser next.	
+	self assert: (parser tagName = 'name').
+	parser next.
+	self should: [ parser tagName ] raise: MessageNotUnderstood.
+	self assert: parser text = 'Kent Beck'.
+	parser next.
+	self assert: (parser tagName = 'notedFor').
+	parser next.
+	self should: [ parser tagName ] raise: MessageNotUnderstood.
+	parser next.
+	self assert: parser next isEndTag.
+	self assert: parser next isEndDocument
+]
+
+{ #category : #testing }
 XMLPullParserTest >> testTextExtractionFirstLevel [
 	"self debug:#testTextExtractionFirstLevel"
 	
@@ -143,4 +234,30 @@ XMLPullParserTest >> testTextExtractionFirstLevel2 [
   	[ xpp next isEndDocument ] whileFalse: [
    	    xpp isText ifTrue: [ output nextPutAll: xpp text ]].
   	 self assert: output contents  equals: 'Kent BeckXP'
+]
+
+{ #category : #testing }
+XMLPullParserTest >> testTextWhileNotTag [
+	| parser myFinalTag nodes |
+	parser := XMLPullParser parse: '
+<person id="27">
+	<!-- Comment -->
+	<attNode1></attNode1>
+	<attNode2></attNode2>
+	<id>27</id>
+	<name>Kent Beck</name>
+	<notedFor>XP</notedFor>
+</person>
+'.
+	myFinalTag :=  'notedFor'.
+	nodes := OrderedCollection new.
+	self assert: parser isStartDocument.
+	[ parser isStartTag: myFinalTag ] whileFalse: [ | text |
+		parser next.
+		(text := parser textWhileNotTag: myFinalTag) notNil ifTrue: [ nodes add: text ] ].
+	self assert: (parser isStartTag: myFinalTag).
+	self assert: nodes notEmpty.
+	self assert: (nodes hasEqualElements: {'id' ->'27' . 'name'->'Kent Beck'}).
+
+	
 ]

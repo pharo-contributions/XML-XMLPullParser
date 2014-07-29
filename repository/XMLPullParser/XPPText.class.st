@@ -36,6 +36,13 @@ XPPText class >> text: aString [
 ]
 
 { #category : #testing }
+XPPText >> isTag [
+	" Answer <true> if receiver does represent a tag "
+
+	^ false
+]
+
+{ #category : #testing }
 XPPText >> isText [
 	^ true
 ]

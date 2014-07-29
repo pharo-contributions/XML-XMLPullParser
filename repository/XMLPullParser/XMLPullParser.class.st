@@ -174,6 +174,46 @@ XMLPullParser >> current [
 	^ current
 ]
 
+{ #category : #'tag-based api' }
+XMLPullParser >> currentNode [
+	" Answer an <Association> of current text event tag name and value. Skip remaining events "
+
+	| tag |
+	
+	[ self isTag ]
+		whileTrue: [ 
+			tag := self tag.
+			self next ].
+	^ self peekText isEmpty
+		ifFalse: [ tag name -> self peekText ]
+		ifTrue: [ self error ]
+]
+
+{ #category : #'tag-based api' }
+XMLPullParser >> currentNodeUpToAny: aTagCollection [
+	" Answer an <Association> of tag name and its value included in aTagCollection. Skip all remaining nodes "
+
+	| tag |
+	[ self isEndDocument not and: [self isTag and: [ (self includesTag: aTagCollection) not] ]]
+		whileTrue: [ 
+			tag := self tag.
+			self next ].
+	^ (self isEndDocument not and: [ self isText and: [ (self includesTag: aTagCollection) not ]])
+		ifTrue: [ 
+			self next.
+			self currentNodeUpToAny: aTagCollection ]
+		ifFalse: [ 
+			(self isEndDocument not and: [self peekText isEmpty])
+				ifFalse: [ 
+					self isEndDocument 
+						ifTrue: [ nil ]
+						ifFalse: [ tag name -> self peekText ] ]
+				ifTrue: [ 
+					tag := self tag.
+					self next.
+					tag name -> self peekText  ] ]
+]
+
 { #category : #entities }
 XMLPullParser >> entities [
 	entities ifNil: [entities := self initEntities].
@@ -236,6 +276,13 @@ XMLPullParser >> ifAnyTake: aBlock else: elseBlock [
 	^self isStartTag ifTrue: [self matchAnyTake: aBlock] ifFalse: [ elseBlock value ].
 ]
 
+{ #category : #'testing event types' }
+XMLPullParser >> includesTag: aTagCollection [
+	" Answer <true> if current tag is included in aTagCollection "
+
+	^ aTagCollection anySatisfy: [ : tagString | (self isStartTag: tagString) ]
+]
+
 { #category : #entities }
 XMLPullParser >> initEntities [
 	| ents |
@@ -291,6 +338,13 @@ XMLPullParser >> isStartTag [
 { #category : #'testing event types' }
 XMLPullParser >> isStartTag: aStringOrNodeTag [
 	^self current isStartTag: aStringOrNodeTag
+]
+
+{ #category : #'testing event types' }
+XMLPullParser >> isTag [
+	" Answer <true> if the current node does represent a tag "
+
+	^ self isText not
 ]
 
 { #category : #'testing event types' }
@@ -748,6 +802,17 @@ XMLPullParser >> peek [
 		ifNotNil: [^ peekChar]
 ]
 
+{ #category : #'tag-based api' }
+XMLPullParser >> peekText [
+	" Answer a <String> with the current text without consuming. If current event is not text, then answer an empty <String> "
+
+	^ self isText 
+		ifTrue: [ | text |
+			text := self current text.
+			text ]
+		ifFalse: [ '' ]
+]
+
 { #category : #private }
 XMLPullParser >> readNumberBase: base [
 	"Read a hex number from stream until encountering $; "
@@ -897,6 +962,13 @@ XMLPullParser >> tag [
 	^self current tag
 ]
 
+{ #category : #'tag-based api' }
+XMLPullParser >> tagName [
+	" Answer a <String> of the receiver's current tag name "
+	
+	^ self tag name
+]
+
 { #category : #'delegating accessors' }
 XMLPullParser >> text [
 	^ self isText 
@@ -936,6 +1008,20 @@ XMLPullParser >> textOf: tagName [
 { #category : #'tag-based api' }
 XMLPullParser >> textOfAny [
 	^self matchAnyTake: [self text]
+]
+
+{ #category : #'tag-based api' }
+XMLPullParser >> textWhileNotTag: aTagString [
+	" Answer current receiver node until aTagString is found. Answer an <Association> with tag name and value, or <nil> if none found "
+
+	| tag |
+	[ self isTag and: [ (self isStartTag: aTagString) not ]]
+		whileTrue: [ 
+			tag := self tag.
+			self next ].
+	^ self peekText isEmpty
+		ifFalse: [ tag name -> self peekText ]
+		ifTrue: [ nil ]
 ]
 
 { #category : #streaming }

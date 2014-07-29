@@ -21,6 +21,12 @@ XPPTagEvent >> is: tagName [
 ]
 
 { #category : #accessing }
+XPPTagEvent >> isTag [
+	" Answer <true> if receiver does represent a tag "
+	^ true
+]
+
+{ #category : #accessing }
 XPPTagEvent >> name [
 	^ tag name
 ]
