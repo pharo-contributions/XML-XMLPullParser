@@ -187,7 +187,7 @@ ConfigurationOfXMLPullParser >> customProjectAttributes [
 ConfigurationOfXMLPullParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.4'.
+	spec for: #'common' version: '1.5'.
 
 ]
 
@@ -272,7 +272,20 @@ ConfigurationOfXMLPullParser >> version14: spec [
 		spec blessing: #'stable'.
 		spec description: 'version 1.4'.
 		spec author: 'HernanMoralesDurand'.
-		spec timestamp: '7/29/2014 12:35'.
-		spec package: 'XMLPullParser' with: 'XMLPullParser-HernanMoralesDurand.22'. ].
+		spec timestamp: '9/8/2014 12:35'.
+		spec package: 'XMLPullParser' with: 'XMLPullParser-TommasoDalSasso.24'. ].
+
+]
+
+{ #category : #versions }
+ConfigurationOfXMLPullParser >> version15: spec [
+	<version: '1.5' imports: #('1.0-baseline' )>
+
+	spec for: #'common' do: [
+		spec blessing: #'development'.
+		spec description: 'version 1.5'.
+		spec author: 'HernanMoralesDurand'.
+		spec timestamp: '9/8/2014 12:35'.
+		spec package: 'XMLPullParser' with: 'XMLPullParser-HernanMoralesDurand.25'. ].
 
 ]
