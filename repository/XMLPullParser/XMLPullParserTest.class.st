@@ -30,6 +30,16 @@ XMLPullParserTest >> testCharacterReferences [
 	self assert: parser next isEndDocument
 ]
 
+{ #category : #'as yet unclassified' }
+XMLPullParserTest >> testDecimalEntity [
+	| parser |
+	
+	parser := XMLPullParser parse: '
+		<tag contents="one&#10;two" />'.
+	
+	self assert: (parser next at: #contents) equals: (Character lf join: #(one two))
+]
+
 { #category : #testing }
 XMLPullParserTest >> testDoubleTag [
 	| parser |
@@ -59,6 +69,16 @@ XMLPullParserTest >> testEscapes [
 	self assert: parser next isText.
 	self assert: (parser text = 'Escaped & Unescaped: <>').
 	self assert: parser next isEndDocument
+]
+
+{ #category : #'as yet unclassified' }
+XMLPullParserTest >> testHexEntity [
+	| parser |
+	
+	parser := XMLPullParser parse: '
+		<tag contents="one&#xA;two" />'.
+	
+	self assert: (parser next at: #contents) equals: (Character lf join: #(one two))
 ]
 
 { #category : #testing }
