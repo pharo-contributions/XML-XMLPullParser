@@ -30,7 +30,7 @@ XMLPullParserTest >> testCharacterReferences [
 	self assert: parser next isEndDocument
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 XMLPullParserTest >> testDecimalEntity [
 	| parser |
 	
@@ -71,7 +71,7 @@ XMLPullParserTest >> testEscapes [
 	self assert: parser next isEndDocument
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 XMLPullParserTest >> testHexEntity [
 	| parser |
 	

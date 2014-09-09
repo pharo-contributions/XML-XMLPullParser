@@ -191,6 +191,7 @@ XMLPullParser >> currentNode [
 
 { #category : #'tag-based api' }
 XMLPullParser >> currentNodeUpToAny: aTagCollection [
+	" To be removed "
 	" Answer an <Association> of tag name and its value included in aTagCollection. Skip all remaining nodes "
 
 	| tag |
@@ -778,6 +779,19 @@ XMLPullParser >> nextXMLDecl [
 	
 ]
 
+{ #category : #'tag-based api' }
+XMLPullParser >> nodesIfAny: tagNames [
+	" Iterate tagNames until found and answer a <Collection> of matching <Association>s . Answer an empty <Collection> if no tag name is found "
+
+	| results |
+	
+	results := OrderedCollection new: tagNames size.
+	tagNames do: [ : tagName | 
+		(self textIf: tagName) ifNotEmptyDo: [ : text | results add: tagName -> text ] ].
+	^ results
+
+]
+
 { #category : #'initialize-release' }
 XMLPullParser >> parse: source [ 
 	source isStream 
@@ -838,6 +852,14 @@ XMLPullParser >> readNumberBase: base [
 			value := value * base + digit]
 		] repeat.
 	^ value
+]
+
+{ #category : #private }
+XMLPullParser >> reset [
+	" Private - Reset to start position "
+
+	stream reset.
+	current := XPPStartDocument new
 ]
 
 { #category : #serializing }
@@ -993,6 +1015,19 @@ XMLPullParser >> textIf: tagName else: aBlock [
 { #category : #'tag-based api' }
 XMLPullParser >> textIfAny [
 	^self ifAnyTake: [self text] else: [ '' ].
+]
+
+{ #category : #'tag-based api' }
+XMLPullParser >> textIfAny: tagNames [
+	" Iterate tagNames until found and answer its text. Answer an empty <Collection> if no tag name is found "
+
+	| results |
+	
+	results := OrderedCollection new: tagNames size.
+	tagNames do: [ : tagName | 
+		(self textIf: tagName) ifNotEmptyDo: [ : text | results add: text ] ].
+	^ results
+
 ]
 
 { #category : #'tag-based api' }
