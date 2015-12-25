@@ -49,8 +49,7 @@ ConfigurationOfXMLPullParser class >> catalogChangeLog [
 { #category : #catalog }
 ConfigurationOfXMLPullParser class >> catalogDescription [
 
-^ 
-'XMLPullParser is a robust parser for XML.'
+	^ 'XMLPullParser is a robust StAX (pull) parser for XML'
 ]
 
 { #category : #catalog }
@@ -80,7 +79,7 @@ Tests of the ==XMLPullParserTest== class are the place to start to learn the API
 
 { #category : #catalog }
 ConfigurationOfXMLPullParser class >> catalogKeywords [
-	^ #(XML web parser)
+	^ #(XML web parser stax)
 	
 ]
 
@@ -187,7 +186,7 @@ ConfigurationOfXMLPullParser >> customProjectAttributes [
 ConfigurationOfXMLPullParser >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.5'.
+	spec for: #'common' version: '1.6'.
 
 ]
 
@@ -209,6 +208,7 @@ ConfigurationOfXMLPullParser >> stable: spec [
 	<symbolicVersion: #'stable'>
 
 	spec for: #'common' version: '1.4'.
+	spec for: #'pharo5.x' version: '1.6'.
 
 ]
 
@@ -287,5 +287,18 @@ ConfigurationOfXMLPullParser >> version15: spec [
 		spec author: 'HernanMoralesDurand'.
 		spec timestamp: '9/8/2014 12:35'.
 		spec package: 'XMLPullParser' with: 'XMLPullParser-HernanMoralesDurand.25'. ].
+
+]
+
+{ #category : #versions }
+ConfigurationOfXMLPullParser >> version16: spec [
+	<version: '1.6' imports: #('1.0-baseline' )>
+
+	spec for: #'common' do: [
+		spec blessing: #'development'.
+		spec description: 'version 1.6'.
+		spec author: 'HernanMoralesDurand'.
+		spec timestamp: '25/12/2015 12:35'.
+		spec package: 'XMLPullParser' with: 'XMLPullParser-HernanMoralesDurand.26'. ].
 
 ]
