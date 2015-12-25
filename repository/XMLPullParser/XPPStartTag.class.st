@@ -40,7 +40,7 @@ XPPStartTag >> at: attName [
 	^ self at: attName
 		ifNone: 
 			[XPPStructureException 
-				raiseSignal: 'Expected attribute ' , attName , ' is missing']
+				signal: 'Expected attribute ' , attName , ' is missing']
 ]
 
 { #category : #accessing }

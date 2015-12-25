@@ -87,12 +87,12 @@ XMLPullParser >> at: attName ifNone: aBlock [
 
 { #category : #streaming }
 XMLPullParser >> atEnd [
-	nestedStreams == nil ifTrue: [^ peekChar == nil and: [stream atEnd]].
-	^ stream atEnd 
-		ifTrue: 
-			[self popNestingLevel.
-			self atEnd]
-		ifFalse: [false]
+	nestedStreams isNil
+		ifTrue: [ ^ peekChar isNil and: [ stream atEnd ] ].
+	^ stream atEnd
+		ifTrue: [ self popNestingLevel.
+			self atEnd ]
+		ifFalse: [ false ]
 ]
 
 { #category : #'tag-based api' }
@@ -198,7 +198,7 @@ XMLPullParser >> entities [
 { #category : #entities }
 XMLPullParser >> entity: refName [ 
 	^ self entities at: refName
-		ifAbsentPut: [XPPStructureException raiseSignal: 'XML undefined entity ' , refName printString]
+		ifAbsentPut: [XPPStructureException signal: 'XML undefined entity ' , refName printString]
 ]
 
 { #category : #private }
@@ -271,7 +271,7 @@ XMLPullParser >> initEntities [
 	^ ents
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialization }
 XMLPullParser >> initialize [
 	super initialize.
 	parsingMarkup := false.
@@ -373,44 +373,45 @@ XMLPullParser >> matchAnyTake: aBlock [
 
 { #category : #'asserting event types' }
 XMLPullParser >> mustBeEndDocument [
+
 	self isEndDocument 
-		ifFalse: [XPPStructureException raiseSignal: 'Expected end of document']
+		ifFalse: [XPPStructureException signal: 'Expected end of document']
 ]
 
 { #category : #'asserting event types' }
 XMLPullParser >> mustBeEndTag [
 	self isEndTag 
-		ifFalse: [XPPStructureException raiseSignal: 'Expected end tag']
+		ifFalse: [XPPStructureException signal: 'Expected end tag']
 ]
 
 { #category : #'asserting event types' }
 XMLPullParser >> mustBeEndTag: tagName [
 	(self isEndTag: tagName)
-		ifFalse: [XPPStructureException raiseSignal: 'Expected end tag: ', tagName]
+		ifFalse: [XPPStructureException signal: 'Expected end tag: ', tagName]
 ]
 
 { #category : #'asserting event types' }
 XMLPullParser >> mustBeStartDocument [
 	self isStartDocument 
-		ifFalse: [XPPStructureException raiseSignal: 'Expected start of document']
+		ifFalse: [XPPStructureException signal: 'Expected start of document']
 ]
 
 { #category : #'asserting event types' }
 XMLPullParser >> mustBeStartTag [
 	self isStartTag
-		ifFalse: [XPPStructureException raiseSignal: 'Expected start tag']
+		ifFalse: [XPPStructureException signal: 'Expected start tag']
 ]
 
 { #category : #'asserting event types' }
 XMLPullParser >> mustBeStartTag: tagName [
 	(self isStartTag: tagName)
-		ifFalse: [XPPStructureException raiseSignal: 'Expected start tag: ', tagName]
+		ifFalse: [XPPStructureException signal: 'Expected start tag: ', tagName]
 ]
 
 { #category : #'asserting event types' }
 XMLPullParser >> mustBeText [
 	self isText
-		ifFalse: [XPPStructureException raiseSignal: 'Expected text']
+		ifFalse: [XPPStructureException signal: 'Expected text']
 ]
 
 { #category : #'core api' }
@@ -707,7 +708,7 @@ XMLPullParser >> nextTrimmedBlanksUpTo: delimiter [
 		whileFalse: [nextChar == $  ifFalse: [resultStream nextPut: nextChar]].
 	nextChar == delimiter 
 		ifFalse: 
-			[XPPStructureException raiseSignal: 'XML no delimiting ' , delimiter printString , ' found'].
+			[XPPStructureException signal: 'XML no delimiting ' , delimiter printString , ' found'].
 	^ resultStream contents
 ]
 
@@ -719,7 +720,7 @@ XMLPullParser >> nextUpToAll: delimitingString [
 	 stream skip: delimitingString size negated.
 	( stream next: delimitingString size) = delimitingString 
 		ifFalse: 
-			[XPPStructureException raiseSignal: 'XML no delimiting ' , delimitingString printString , ' found'].
+			[XPPStructureException signal: 'XML no delimiting ' , delimitingString printString , ' found'].
 	^ string
 ]
 
@@ -766,11 +767,11 @@ XMLPullParser >> nodesIfAny: tagNames [
 
 ]
 
-{ #category : #'initialize-release' }
-XMLPullParser >> parse: source [ 
-	source isStream 
-		ifTrue: [stream := source]
-		ifFalse: [stream := source readStream].
+{ #category : #initialization }
+XMLPullParser >> parse: source [
+	stream := source isStream
+		ifTrue: [ source ]
+		ifFalse: [ source readStream ].
 	current := XPPStartDocument new
 ]
 
@@ -865,7 +866,7 @@ XMLPullParser >> serializeUntilEndTagTo: serializer [
 				ifFalse: 
 					[event isStartTag 
 						ifTrue: [self serializeTagTo: serializer]
-						ifFalse: [XPPStructureException raiseSignal: 'Unexpected element']]]
+						ifFalse: [XPPStructureException signal: 'Unexpected element']]]
 ]
 
 { #category : #'tag-based api' }
@@ -881,7 +882,7 @@ XMLPullParser >> skip: tagName [
 				ifFalse: 
 					[event isStartTag 
 						ifTrue: [self skipAny]
-						ifFalse: [XPPStructureException raiseSignal: 'Unexpected element']]].
+						ifFalse: [XPPStructureException signal: 'Unexpected element']]].
 	self consumeEndTag: tagName
 ]
 
@@ -897,7 +898,7 @@ XMLPullParser >> skipAny [
 				ifFalse: 
 					[event isStartTag 
 						ifTrue: [self skipAny]
-						ifFalse: [XPPStructureException raiseSignal: 'Unexpected element']]].
+						ifFalse: [XPPStructureException signal: 'Unexpected element']]].
 	self consumeEndTag
 ]
 
@@ -930,7 +931,7 @@ XMLPullParser >> skipUpTo: delimiter [
 	[self atEnd or: [(nextChar := self nextChar) == delimiter]] whileFalse: [].
 	nextChar == delimiter 
 		ifFalse: 
-			[XPPStructureException raiseSignal: 'XML no delimiting ' , delimiter printString , ' found']
+			[XPPStructureException signal: 'XML no delimiting ' , delimiter printString , ' found']
 ]
 
 { #category : #'tag-based api' }
