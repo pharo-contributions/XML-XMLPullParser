@@ -189,6 +189,32 @@ XMLPullParser >> currentNode [
 		ifTrue: [ self error ]
 ]
 
+{ #category : #'tag-based api' }
+XMLPullParser >> currentNodeUpToAny: aTagCollection [
+	" To be removed "
+	" Answer an <Association> of tag name and its value included in aTagCollection. Skip all remaining nodes "
+
+	| tag |
+	[ self isEndDocument not and: [self isTag and: [ (self includesTag: aTagCollection) not] ]]
+		whileTrue: [ 
+			tag := self tag.
+			self next ].
+	^ (self isEndDocument not and: [ self isText and: [ (self includesTag: aTagCollection) not ]])
+		ifTrue: [ 
+			self next.
+			self currentNodeUpToAny: aTagCollection ]
+		ifFalse: [ 
+			(self isEndDocument not and: [self peekText isEmpty])
+				ifFalse: [ 
+					self isEndDocument 
+						ifTrue: [ nil ]
+						ifFalse: [ tag name -> self peekText ] ]
+				ifTrue: [ 
+					tag := self tag.
+					self next.
+					tag name -> self peekText  ] ]
+]
+
 { #category : #entities }
 XMLPullParser >> entities [
 	entities ifNil: [entities := self initEntities].
@@ -298,6 +324,12 @@ XMLPullParser >> isEndTag [
 { #category : #'testing event types' }
 XMLPullParser >> isEndTag: aStringOrNodeTag [
 	^self current isEndTag: aStringOrNodeTag
+]
+
+{ #category : #'testing event types' }
+XMLPullParser >> isNot: tagName [
+
+	^ (self is: tagName) not
 ]
 
 { #category : #'testing event types' }
@@ -941,7 +973,25 @@ XMLPullParser >> skipWhile: tagName [
 
 { #category : #'tag-based api' }
 XMLPullParser >> skipWhileAny [
-	[self isStartTag] whileTrue: [self skipAny]
+
+	[ self isStartTag ] whileTrue: [ self skipAny ]
+]
+
+{ #category : #'tag-based api' }
+XMLPullParser >> skipWhileNot: tagName [ 
+
+	[ self isNot: tagName ] whileTrue: [ self skipAny ]
+]
+
+{ #category : #'tag-based api' }
+XMLPullParser >> skipWhileNotAny: tagCollection [
+
+	tagCollection do: [ : tagName | 
+		| tag |
+		[ (self isNot: tagName) and: [ self atEnd not ]] whileTrue: [ self skipAny ].
+		tag := self tag.
+		self next.
+		^ tag name -> self peekText  ]
 ]
 
 { #category : #streaming }
@@ -1025,7 +1075,7 @@ XMLPullParser >> textWhileNotTag: aTagString [
 	" Answer current receiver node until aTagString is found. Answer an <Association> with tag name and value, or <nil> if none found "
 
 	| tag |
-	[ self isTag and: [ (self isStartTag: aTagString) not ]]
+	[ self atEnd not and: [ self isTag and: [ (self isStartTag: aTagString) not ]]]
 		whileTrue: [ 
 			tag := self tag.
 			self next ].
