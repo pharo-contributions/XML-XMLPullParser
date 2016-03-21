@@ -312,6 +312,17 @@ XMLPullParser >> is: tagName [
 ]
 
 { #category : #'testing event types' }
+XMLPullParser >> isDocumentTag [
+	" Answer <true> if :
+	1) Receiver is not at end of document 
+	2) Receiver current node is a tag
+	3) Receiver current node is NOT a start document event
+	4) Receiver current node is NOT an end document event "
+	
+	^ self atEnd not and: [ self isTag and: [ self isNotStartEndDocument ] ]
+]
+
+{ #category : #'testing event types' }
 XMLPullParser >> isEndDocument [
 	^self current isEndDocument
 ]
@@ -330,6 +341,12 @@ XMLPullParser >> isEndTag: aStringOrNodeTag [
 XMLPullParser >> isNot: tagName [
 
 	^ (self is: tagName) not
+]
+
+{ #category : #'testing event types' }
+XMLPullParser >> isNotStartEndDocument [
+
+	^ self isStartDocument not and: [ self isEndDocument not ]
 ]
 
 { #category : #'testing event types' }
@@ -985,13 +1002,14 @@ XMLPullParser >> skipWhileNot: tagName [
 
 { #category : #'tag-based api' }
 XMLPullParser >> skipWhileNotAny: tagCollection [
-
+	" Answer an <Association> of tag name -> tag text. Skip all nodes in tagCollection "
+	
 	tagCollection do: [ : tagName | 
 		| tag |
-		[ (self isNot: tagName) and: [ self atEnd not ]] whileTrue: [ self skipAny ].
+		[ (self isNot: tagName) and: [ self atEnd not ] ] whileTrue: [ self skipAny ].
 		tag := self tag.
 		self next.
-		^ tag name -> self peekText  ]
+		^ tag name -> self peekText ]
 ]
 
 { #category : #streaming }
@@ -1029,17 +1047,20 @@ XMLPullParser >> text [
 
 { #category : #'tag-based api' }
 XMLPullParser >> textIf: tagName [
-	^self if: tagName take: [self text] else: [ '' ].
+
+	^ self if: tagName take: [ self text ] else: [ '' ].
 ]
 
 { #category : #'tag-based api' }
 XMLPullParser >> textIf: tagName else: aBlock [
-	^self if: tagName take: [self text] else: [ aBlock value ].
+
+	^ self if: tagName take: [ self text ] else: [ aBlock value ].
 ]
 
 { #category : #'tag-based api' }
 XMLPullParser >> textIfAny [
-	^self ifAnyTake: [self text] else: [ '' ].
+
+	^ self ifAnyTake: [ self text ] else: [ '' ].
 ]
 
 { #category : #'tag-based api' }
@@ -1047,12 +1068,9 @@ XMLPullParser >> textIfAny: tagNames [
 	" Iterate tagNames until found and answer its text. Answer an empty <Collection> if no tag name is found "
 
 	| results |
-	
 	results := OrderedCollection new: tagNames size.
-	tagNames do: [ : tagName | 
-		(self textIf: tagName) ifNotEmptyDo: [ : text | results add: text ] ].
+	tagNames 	do: [ :tagName | (self textIf: tagName) ifNotEmpty: [ :text | results add: text ] ].
 	^ results
-
 ]
 
 { #category : #'tag-based api' }
@@ -1062,12 +1080,26 @@ XMLPullParser >> textIfAnyElse: aBlock [
 
 { #category : #'tag-based api' }
 XMLPullParser >> textOf: tagName [ 
-	^self match: tagName take: [self text]
+	" Consume Start and End of tagName answering the text inside tag. Current node must be a start tag "
+
+	^ self match: tagName take: [ self text ]
 ]
 
 { #category : #'tag-based api' }
 XMLPullParser >> textOfAny [
-	^self matchAnyTake: [self text]
+
+	^ self matchAnyTake: [ self text ]
+]
+
+{ #category : #'tag-based api' }
+XMLPullParser >> textOfAny: tagCollection [ 
+	" Answer an <Association> of tag name -> tag value. Include only tags found in tagCollection. If none found for the current node, answer nil "
+
+	[ self isDocumentTag and: [ tagCollection noneSatisfy: [ : aTagString | self isStartTag: aTagString ] ] ]
+		whileTrue: [ self next ].
+	^ (self isDocumentTag and: [ tagCollection includes: self tag name ])
+		ifTrue: [ self tag name -> (self textOf: self tag name) ]
+		ifFalse: [ nil ]
 ]
 
 { #category : #'tag-based api' }
@@ -1075,7 +1107,7 @@ XMLPullParser >> textWhileNotTag: aTagString [
 	" Answer current receiver node until aTagString is found. Answer an <Association> with tag name and value, or <nil> if none found "
 
 	| tag |
-	[ self atEnd not and: [ self isTag and: [ (self isStartTag: aTagString) not ]]]
+	[ self atEnd not and: [ self isTag and: [ (self isStartTag: aTagString) not ] ] ]
 		whileTrue: [ 
 			tag := self tag.
 			self next ].
